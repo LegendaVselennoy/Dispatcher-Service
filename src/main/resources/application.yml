@@ -1,0 +1,21 @@
+server:
+  port: 9003 # Порт, который будет использоваться встроенным веб-сервером
+spring:
+  application:
+    name: dispatcher-service # Название приложения
+  cloud:
+    function:
+      definition: pack|label # Определение функции, управляемой функцией Spring Cloud
+    stream:
+      bindings:              # Раздел для настройки привязок назначения
+        packlabel-in-0:      # Входная привязка
+          destination: order-accepted       # Фактическое имя у брокера, к которому привязан биндер (биржа в RabbitMQ)
+          group: ${spring.application.name} # Группа потребителей, заинтересованная в назначении (то же самое, что и имя приложения)
+        packlabel-out-0:      # Выходная привязка
+          destination: order-dispatched   # Фактическое имя у брокера, к которому привязан биндер (биржа в RabbitMQ)
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    connection-timeout: 5s
